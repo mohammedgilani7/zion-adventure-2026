@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zion & Bryce Trip Map</title>
+  <link rel="stylesheet" href="leaflet.css">
+  <link rel="stylesheet" href="trip-map.css">
+  <script defer src="leaflet.js"></script>
+  <script defer src="trip-places.js"></script>
+  <script defer src="trip-map.js"></script>
+</head>
+<body>
+  <header class="wrap">
+    <a class="back" href="../#home">← Trip home</a>
+    <h1>Trip map</h1>
+    <p class="map-intro">Tap a pin for trailheads, shuttle stops and directions.</p>
+  </header>
+  <main class="wrap">
+    <div class="map-frame">
+      <div id="map" role="region" aria-label="Interactive trip map of Orderville, Zion, Bryce Canyon and Las Vegas"></div>
+      <div class="map-controls" hidden>
+        <button type="button" id="reset-view">Reset view</button>
+        <button type="button" id="overview">Show all</button>
+      </div>
+    </div>
+    <p id="map-status" role="status" hidden></p>
+    <div class="map-content">
+      <section id="detail" class="detail" aria-live="polite" aria-atomic="true">
+        <h2>Choose a place</h2>
+        <p>Pick a map pin or a place below to see its guide and travel options.</p>
+      </section>
+      <section class="place-list" aria-labelledby="places-title">
+        <h2 id="places-title">Places</h2>
+        <div id="places"></div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

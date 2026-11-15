@@ -1,0 +1,66 @@
+:root {
+  color-scheme: light;
+  --ink: #24211e;
+  --paper: #fbf8f2;
+  --card: #fffdf9;
+  --canyon: #843e24;
+  --line: #e0d8cc;
+  --muted: #514941;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.45 system-ui, sans-serif; }
+[hidden] { display: none !important; }
+.wrap { max-width: 960px; margin: auto; padding-inline: 16px; }
+header { padding-top: 14px; }
+main { padding-bottom: 28px; }
+.back { font-size: .94rem; }
+h1 { font: 700 clamp(2rem, 6vw, 2.75rem)/1.08 Georgia, serif; margin: 6px 0 7px; }
+.map-intro { margin: 0 0 14px; color: var(--muted); }
+a { color: var(--canyon); }
+button { font: inherit; cursor: pointer; color: var(--ink); }
+button:focus-visible, a:focus-visible, .map-marker:focus-visible { outline: 3px solid #d1823e; outline-offset: 3px; }
+
+.map-frame { position: relative; }
+#map { height: clamp(310px, 52svh, 490px); border-radius: 12px; background: #e0d8cc; color: var(--ink); z-index: 0; }
+.map-controls { position: absolute; top: 10px; right: 10px; z-index: 1; display: flex; gap: 6px; }
+.map-controls button { min-height: 44px; padding: 4px 10px; background: var(--card); border: 1px solid var(--line); border-radius: 6px; font-size: .88rem; font-weight: 700; }
+#map-status { font-size: .92rem; margin: 8px 0 0; }
+
+.map-content { display: grid; gap: 17px; margin-top: 12px; align-items: start; }
+.detail { padding: 14px 16px; }
+.detail, .leaflet-popup-content-wrapper { border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
+.detail h2, .place-popup h3, .place-list h2 { margin: 0; font: 700 clamp(1.35rem, 4.4vw, 1.8rem)/1.16 Georgia, serif; }
+.place-facts { margin: 9px 0 12px; padding-left: 19px; color: var(--muted); }
+.place-facts li + li { margin-top: 4px; }
+.actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.action { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 6px 10px; border: 1px solid var(--canyon); border-radius: 7px; font-weight: 700; text-decoration: none; }
+.action.primary { background: var(--canyon); color: white; }
+.support-links { display: flex; flex-wrap: wrap; gap: 2px 12px; margin-top: 4px; }
+.support-links a { display: inline-flex; align-items: center; min-height: 38px; text-underline-offset: 3px; }
+.support-links:empty, .actions:empty { display: none; }
+
+#map .leaflet-popup-content { margin: 12px 14px; }
+#map .leaflet-popup-content-wrapper { background: var(--card); color: var(--ink); }
+#map .leaflet-popup-close-button { width: 42px; height: 42px; font-size: 24px; line-height: 42px; }
+#map .place-popup a { color: var(--canyon); }
+#map .place-popup .action.primary { color: white; }
+.place-popup { font: 15px/1.34 system-ui, sans-serif; }
+.place-popup h3 { padding-right: 18px; font-size: 1.18rem; }
+.place-popup .place-facts { margin: 7px 0; padding-left: 17px; }
+.place-popup .action, .place-popup .support-links { font-size: .88rem; }
+
+#places { display: grid; gap: 12px; }
+.place-group { display: grid; gap: 5px; }
+.place-group h3 { margin: 6px 0 1px; color: var(--muted); font-size: .94rem; }
+.place-button { display: flex; gap: 10px; align-items: center; width: 100%; min-height: 46px; padding: 7px 10px; text-align: left; border: 1px solid var(--line); border-radius: 8px; background: var(--card); font-weight: 650; }
+.place-button[aria-pressed="true"] { background: #f5ece0; border-color: var(--canyon); }
+.place-number, .map-marker { display: grid; place-items: center; border-radius: 50%; background: var(--canyon); color: white; font: 700 15px/1 system-ui, sans-serif; font-variant-numeric: tabular-nums; }
+.place-number { flex: 0 0 25px; height: 25px; font-size: 13px; }
+.map-marker { border: 3px solid white; box-shadow: 0 2px 5px #32201869; }
+.map-marker.cluster { background: #514941; border-style: double; border-width: 4px; }
+.map-marker.is-selected { border-color: #ffd9a7; }
+@media (min-width: 720px) {
+  .map-content { grid-template-columns: 3fr 2fr; }
+  .detail { position: sticky; top: 12px; }
+}
