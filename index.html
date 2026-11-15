@@ -35,6 +35,44 @@ header a[aria-current="page"]{color:var(--canyon);text-decoration:underline;text
 .nav-more summary{cursor:pointer;display:list-item;padding:11px 4px;font-weight:700;min-height:44px}
 .nav-more summary:focus-visible{outline:3px solid #d1823e;outline-offset:3px}
 .nav-more-menu{position:absolute;right:0;top:100%;display:grid;min-width:11rem;padding:4px 12px;background:#fffdf9;border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 24px #32201826;z-index:4}
+.menu-trigger{display:none}
+.menu-trigger,.menu-close{width:44px;padding:0;justify-content:center}
+.menu-icon{display:grid;gap:4px;width:20px}
+.menu-icon span{height:2px;border-radius:2px;background:currentColor}
+.mobile-menu{
+  position:fixed;inset:0;margin:0;width:100%;height:100%;width:100dvw;height:100dvh;
+  max-width:none;max-height:none;border:0;padding:0;overflow:auto;overscroll-behavior:contain;
+  color:var(--paper);background:linear-gradient(160deg,#2d211b,#3b271e);
+  color-scheme:dark;
+}
+.mobile-menu::backdrop{background:#281d18}
+body:has(.mobile-menu[open]){overflow:hidden}
+.menu-inner{
+  min-height:100%;max-width:34rem;margin-inline:auto;
+  padding:max(18px,env(safe-area-inset-top)) max(24px,env(safe-area-inset-right)) max(28px,env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left));
+}
+.menu-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:14px;border-bottom:1px solid #f4d4a44f}
+.menu-brand{font-family:Georgia,serif;font-size:1.25rem;text-decoration:none;color:#f4d4a4}
+.menu-close{height:44px;border-radius:50%;font-size:1.75rem;line-height:1;border-color:#f4d4a466;background:transparent;color:var(--paper)}
+.mobile-menu nav{display:grid;gap:0;justify-items:stretch;padding-top:clamp(12px,5dvh,42px)}
+.mobile-menu .menu-primary,.mobile-menu .menu-secondary{display:grid}
+.mobile-menu nav a{padding:7px 12px;color:var(--paper)}
+.mobile-menu .menu-primary a{min-height:55px;font-family:Georgia,serif;font-size:clamp(1.55rem,6vw,2rem);font-weight:600;border-bottom:1px solid #f4d4a432}
+.mobile-menu .menu-secondary{grid-template-columns:repeat(2,minmax(0,1fr));padding-top:12px}
+.mobile-menu .menu-secondary a{font-size:1.05rem;font-weight:650;line-height:1.25}
+.mobile-menu a[aria-current="page"]{color:#f4d4a4;background:#f4d4a41a;text-decoration:underline;text-underline-offset:.25em}
+.mobile-menu .menu-brand[aria-current="page"]{background:transparent;text-decoration:none}
+.mobile-menu a:hover,.menu-close:hover{background:#f4d4a41a}
+.explorer-filters{display:grid;gap:14px;margin:18px 0}
+.filter-group{margin:0;border:0;padding:0;min-width:0}
+.filter-group legend,.filter-difficulty span{padding:0;font-weight:750}
+.filter-buttons{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.filter-difficulty{display:grid;justify-items:start;gap:6px}
+.filter-difficulty select{max-width:100%}
+@media(min-width:760px){
+  .explorer-filters{grid-template-columns:max-content 1fr auto;align-items:end}
+  .explorer-filters[data-fixed-park]{grid-template-columns:1fr auto}
+}
 .hero{min-height:clamp(470px,72svh,680px);grid-template-rows:auto 1fr}
 .hero-panel{display:grid;align-self:stretch;align-items:end}
 .hero-panel[hidden]{display:none}
@@ -49,13 +87,13 @@ header a[aria-current="page"]{color:var(--canyon);text-decoration:underline;text
 .day>div{min-width:0}
 .filters label{flex-wrap:wrap}
 #count{margin-bottom:12px}
+@media(max-width:720px){
+  header{flex-wrap:nowrap;min-height:64px}
+  header .desktop-nav{display:none}
+  .menu-trigger{display:inline-flex;flex:none}
+}
 @media(max-width:590px){
   header,.wrap,footer,.hero-switch{width:calc(100% - 28px)}
-  header{position:relative;display:block;padding:7px 0 4px}
-  header>a{display:inline-block;padding:4px 0}
-  header nav{gap:0 12px}
-  header nav a{padding:7px 0}
-  .nav-more{position:static}
   .hero{min-height:0}
   .hero h1{font-size:clamp(2.7rem,11vw,4.5rem)}
   .hero-switch{margin-top:14px}
@@ -72,13 +110,29 @@ header a[aria-current="page"]{color:var(--canyon);text-decoration:underline;text
 <a class="skip" href="#main">Skip to content</a>
 <header>
   <a href="#home">ZION FIELD GUIDE</a>
-  <nav aria-label="Main">
-    <a href="#today">Today</a><a href="#itinerary">Itinerary</a><a href="#explore">Explore Zion</a><a href="#bryce">Bryce Canyon</a>
+  <nav class="desktop-nav" aria-label="Main">
+    <a href="#today">Today</a><a href="#itinerary">Itinerary</a><a href="#explore">Adventures</a><a href="#bryce">Bryce Canyon</a>
     <details class="nav-more">
       <summary>More</summary>
       <div class="nav-more-menu"><a href="#logistics">Maps &amp; costs</a><a href="#essentials">Trip essentials</a><a href="#kids">Kids essentials</a><a href="#videos">Video guides</a></div>
     </details>
   </nav>
+  <button class="menu-trigger" type="button" aria-label="Open menu" aria-haspopup="dialog" aria-controls="mobile-menu" aria-expanded="false">
+    <span class="menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
+  </button>
+  <dialog class="mobile-menu" id="mobile-menu" aria-labelledby="mobile-menu-title">
+    <div class="menu-inner">
+      <div class="menu-heading">
+        <a class="menu-brand" href="#home">Zion &amp; Bryce</a>
+        <h2 id="mobile-menu-title" class="skip">Trip navigation</h2>
+        <form method="dialog"><button class="menu-close" type="submit" aria-label="Close menu" autofocus>×</button></form>
+      </div>
+      <nav aria-label="Main">
+        <div class="menu-primary"></div>
+        <div class="menu-secondary" role="group" aria-label="Trip resources"></div>
+      </nav>
+    </div>
+  </dialog>
 </header>
 <main id="main" tabindex="-1"></main><footer><small>Thanksgiving 2026 · Proposed plans · Check park conditions before heading out.</small></footer>
 <script>
@@ -90,6 +144,8 @@ const status=a=>a[17]||({"riverside-walk":"Main plan","canyon-overlook":"Optiona
 const heroPhoto="photo-0";
 const bryceConditions="https://www.nps.gov/brca/planyourvisit/conditions.htm";
 const bryceFees="https://www.nps.gov/brca/planyourvisit/fees.htm";
+const rentalAddress = "7135 Gilespie Street, Las Vegas, NV 89119";
+const rentalInfo = "https://web.hriairport.com/rental-cars";
 const conditions="https://www.nps.gov/zion/planyourvisit/conditions.htm";
 const shuttle="https://www.nps.gov/zion/planyourvisit/zion-canyon-shuttle-system.htm";
 const fees="https://www.nps.gov/zion/planyourvisit/fees.htm";
@@ -119,11 +175,19 @@ const photoFiles={
 };
 const main=document.querySelector("main");
 const filters = {
+  All: { audience: "all", rank: "all" },
   Zion: { audience: "all", rank: "all" },
   Bryce: { audience: "all", rank: "all" },
 };
-const nav = document.querySelector("nav");
+const nav = document.querySelector(".desktop-nav");
 const moreMenu = nav.querySelector("details");
+const menuTrigger = document.querySelector(".menu-trigger");
+const mobileMenu = document.querySelector("#mobile-menu");
+const mobileNav = mobileMenu.querySelector("nav");
+nav.querySelectorAll("a").forEach(link => {
+ const group = link.closest("details") ? ".menu-secondary" : ".menu-primary";
+ mobileNav.querySelector(group).append(link.cloneNode(true));
+});
 const rankLabel={"1":"Rank 1 · Easy","2":"Rank 2 · Moderate","3":"Rank 3 · Strenuous"};
 const outingTypes={
  "coral-pink":"State park outing",
@@ -245,30 +309,84 @@ const heading=(k,t)=>'<p class="eyebrow">'+k+'</p><h1 tabindex="-1">'+t+'</h1>';
 function card(a){
  return '<article class="card"><a class="card-photo" href="#guide/'+a[0]+'" aria-label="Open '+a[1]+' guide">'+photo(a,true)+'<span class="photo-action" aria-hidden="true">Open guide →</span></a><div class="inside"><p class="credit muted">'+a[11]+'</p><p><span class="tag">'+activityLabel(a)+'</span> <small>'+audiences[a[3]]+'</small></p><h3>'+a[1]+'</h3><p class="muted">'+a[2]+'</p><p class="meta">'+a[5]+' · '+a[6]+'</p><p>'+a[8].split("|").join(" · ")+'</p><p><strong>'+a[7]+'</strong></p><p><small>'+status(a)+(a[0].startsWith('bryce-')?' · Trail details checked Nov 15, 2026':' · Sources checked Nov 3, 2026')+'</small></p>'+link("#guide/"+a[0],"View guide →")+'</div></article>';
 }
-function explorer(park="Zion"){
- const {audience} = filters[park];
- return '<section class="wrap" data-park="'+park+'"><p class="eyebrow">Find your outing</p><h2 id="explorer-title" tabindex="-1">Explore '+park+' adventures</h2><p class="muted">Pick who’s coming and how much hiking you want. Check each guide for age, weather and access limits.</p><div class="filters" role="group" aria-label="Audience">'+Object.entries(audiences).map(([key,value])=>'<button type="button" data-audience="'+key+'" aria-pressed="'+(audience===key)+'">'+value+'</button>').join("")+'<label>Difficulty <select id="rank"><option value="all">Any difficulty</option><option value="1">Rank 1 · Easy</option><option value="2">Rank 2 · Moderate</option><option value="3">Rank 3 · Strenuous</option><option value="0">Non-hike outings</option></select></label></div><p id="count" class="muted" role="status"></p><div class="grid" id="cards"></div></section>';
+const parks = {All:"All parks", Zion:"Zion", Bryce:"Bryce Canyon"};
+let explorerPark = "All";
+
+function filterButtons(values, attribute, selected) {
+ return Object.entries(values).map(([key, value]) =>
+  `<button type="button" data-${attribute}="${key}" aria-pressed="${key === selected}">${value}</button>`
+ ).join("");
 }
+
+function explorer(fixedPark){
+ const park = fixedPark || explorerPark;
+ const {audience} = filters[park];
+ const parkFilter = fixedPark ? "" : `
+  <fieldset class="filter-group">
+   <legend>Park</legend>
+   <div class="filter-buttons">${filterButtons(parks, "park-choice", park)}</div>
+  </fieldset>`;
+ return `<section class="wrap" id="adventures" data-park="${park}" ${fixedPark ? "data-fixed-park" : ""}>
+  <h2 id="explorer-title" tabindex="-1">${fixedPark ? "Explore Bryce Canyon" : "Explore Zion &amp; Bryce"}</h2>
+  <div class="explorer-filters" ${fixedPark ? "data-fixed-park" : ""}>
+   ${parkFilter}
+   <fieldset class="filter-group">
+    <legend>Who’s coming?</legend>
+    <div class="filter-buttons">${filterButtons(audiences, "audience", audience)}</div>
+   </fieldset>
+   <label class="filter-difficulty"><span>Difficulty</span>
+    <select id="rank"><option value="all">Any difficulty</option><option value="1">Rank 1 · Easy</option><option value="2">Rank 2 · Moderate</option><option value="3">Rank 3 · Strenuous</option><option value="0">Non-hike outings</option></select>
+   </label>
+  </div>
+  <p id="count" class="muted" role="status"></p>
+  <div class="grid" id="cards"></div>
+ </section>`;
+}
+
 function update(){
- const explorerSection = main.querySelector("[data-park]");
+ const explorerSection = main.querySelector("section[data-park]");
  if (!explorerSection) return;
  const {park} = explorerSection.dataset;
  const {audience, rank} = filters[park];
- const outings = park === "Bryce" ? bryceActivities : activities;
+ const outings = {All:[...activities, ...bryceActivities], Zion:activities, Bryce:bryceActivities}[park];
  const filtered = outings.filter(a => (audience === "all" || audience === a[3]) && (rank === "all" || rank === a[4]));
  explorerSection.querySelectorAll("[data-audience]").forEach(button => {
   button.setAttribute("aria-pressed", String(button.dataset.audience === audience));
  });
+ explorerSection.querySelectorAll("[data-park-choice]").forEach(button => {
+  button.setAttribute("aria-pressed", String(button.dataset.parkChoice === park));
+ });
  explorerSection.querySelector("#rank").value = rank;
- explorerSection.querySelector("#count").textContent = filtered.length + (filtered.length === 1 ? " outing" : " outings");
+ explorerSection.querySelector("#count").textContent = filtered.length + (filtered.length === 1 ? " outing" : " outings") + (park === "All" ? " across both parks" : " · " + parks[park]);
  explorerSection.querySelector("#cards").innerHTML = filtered.length
   ? filtered.map(card).join("")
   : '<p>No outings match these filters. <button type="button" data-reset-filters>Clear filters</button></p>';
 }
+
 const videos={"riverside-walk":["-gKOidr14ow","Riverside Walk to the Narrows","American Travel Fun","2024-05-28","2,025","2.4K",0,"Your trail-specific reference"],"canyon-overlook":["ZDZMbMZWgBY","Canyon Overlook Trail","Live That Adventure","2022-07-06","62.3K","31.5K"],"coral-pink":["g2sAeUsAO-Y","Coral Pink Sand Dunes camping and recreation guide","SeeMyCampsite","2025-06-05","12.7K","3.64K"],"lower-emerald":["5EO21GcrgD0","Emerald Pools segment from Top 10 Zion Hikes","Kevin Eassa","2022-05-08","401K","86.1K",50],"upper-emerald":["5EO21GcrgD0","Emerald Pools segment from Top 10 Zion Hikes","Kevin Eassa","2022-05-08","401K","86.1K",98],"angels-landing":["IVnxwqZxbj8","Angels Landing trail walkthrough","Christine Unfiltered","2026-04-10","7,950","44.5K"],"narrows":["jH8fjrhRyTM","The Ultimate Guide to Hiking the Narrows","Sojourn Expedition","2025-01-12","36.5K","6.31K"],"toadstools":["DXf3SESwvEk","Toadstool Hoodoos hiking guide","Rob & Kass Adventures","2025-09-19","1,865","8.2K"],"overview":["7AcAw1DlSKQ","Zion National Park: Ultimate Travel Guide","Yellow Productions","2024-04-05","255K","438K"],"beginner":["04hBqJiaHaA","A Beginner’s Guide to Zion National Park","Sojourn Expedition","2025-01-09","44.9K","6.31K"],"winter":["exvmxiCtqZA","Three Days in Zion in Winter","Nikki Delventhal","2025-03-14","486K","1.02M",0,"Winter footage and travel perspective"]};
 const familyPrep={"riverside-walk":"Use the restrooms at stop 9 first. Pack a carrier or compact stroller, and turn around when the pavement gets icy or uneven. Keep little hands away from the river.","coral-pink":"Start at the visitor center for a restroom stop. Bring a wind layer, eye protection and spare socks. Stick to nonmotorized areas and ask staff about sled suitability.","east-zion":"Plan short stops at signed pullouts. Have one adult exit first and supervise both children away from the road.","pa-rus":"Bring a compact stroller if useful. Start at the visitor center and pick a short turnaround. Stay clear of cyclists and keep children back from the riverbank.","lower-emerald":"Use the lodge restrooms first. Consider a suitable carrier for a child who tires easily. Switch to Pa’rus if the path is slick or if the group needs a paved, simpler walk.","east-rim-jeep":"Before paying, confirm each child’s age and the operator-approved restraint with the provider. Ask how the group will be seated across vehicles.","peekaboo":"Confirm each child’s age, restraint fit, vehicle capacity and the provider’s flood policy before booking. Plan a restroom stop before the trailhead.","toadstools":"Use the restroom before the trailhead and bring water and a carrier if appropriate. Stay out of the wash if storms threaten and keep children off the fragile formations.","best-friends":"Reserve a family-appropriate tour and ask about both children’s ages, stroller access, and restroom breaks. Follow staff guidance around animals.","zion-museum":"Confirm holiday hours before heading over. Keep this as a short indoor stop and plan a restroom and snack break before the next shuttle."}; 
 const officialVideos={"riverside-walk":["Official Riverside Walk preview","Kelly Teale · Silent trail footage","https://www.nps.gov/nps-audiovideo/legacy/zion/74CE3BCE-AEBD-D8FD-645B83E109B29D4F/zion-Riversidex4GOOD1_426x240.mp4"],"pa-rus":["Official Pa’rus Trail preview","Kelly Teale · Silent trail footage","https://www.nps.gov/nps-audiovideo/legacy/zion/7454A4B2-D946-6B62-0890CB5D92DEE1EC/zion-Parusx4back_426x240.mp4"],"watchman":["Official Watchman Trail preview","Kelly Teale · Archival footage. Check the trail closure above.","https://www.nps.gov/nps-audiovideo/legacy/zion/39113E2F-B6AF-008C-394DD62D73B1AC2C/zion-Watchmanx4_426x240.mp4"],"east-zion":["Zion–Mount Carmel Tunnel history","Alex Cohen · A look at the tunnel and highway","https://www.nps.gov/nps-audiovideo/audiovideo/a7df53b8-7fa9-4e75-9bca-9471b90cd342360p.mp4"],"zion-museum":["Inside Zion Human History Museum","National Park Service · Museum exhibits","https://www.nps.gov/nps-audiovideo/audiovideo/029832d5-ef5f-43f9-9433-62d9a31ea5ec360p.mp4"]};
+const bryceVideos = {
+ "bryce-rim":["NNF_dSkdwgQ","Walking from Sunset Point to Sunrise Point","The Richter Show"],
+ "bryce-mossy":["SWL355PFqNk","Mossy Cave Trail walkthrough","Thenaturalmedic Adventures"],
+ "bryce-queen":["bU0K-UsmfyA","Queen’s Garden and Navajo Loop","Through My Lens",222],
+ "bryce-peekaboo":["-820zjKPyLI","Peekaboo Loop and neighboring trails","Park Junkie"],
+ "bryce-overlooks":["bU0K-UsmfyA","Bryce Canyon viewpoints","Through My Lens",691],
+};
+
+function videoPlayer(id, title, start){
+ const suffix = start ? "&amp;t=" + start + "s" : "";
+ const player = location.protocol === "file:" ? "" :
+  `<iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/${id}${start ? "?start=" + start : ""}" title="${title}" allow="encrypted-media; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+ return player + `<p><a href="https://www.youtube.com/watch?v=${id}${suffix}">Watch on YouTube →</a></p>`;
+}
+
 function watchVideo(id){
+ const bryce = bryceVideos[id];
+ if (bryce) {
+  const [videoId, title, creator, start] = bryce;
+  return `<section class="guide-video"><h2>${title}</h2><p class="muted">${creator}</p>${videoPlayer(videoId, title, start)}<p class="muted">Trail footage for planning. Check National Park Service alerts for current conditions.</p></section>`;
+ }
  const official=officialVideos[id];
  if(official){
   const activity=activities.find(a=>a[0]===id);
@@ -277,10 +395,7 @@ function watchVideo(id){
 
  const v=videos[id];if(!v)return "";
  const published=new Intl.DateTimeFormat("en-US",{dateStyle:"medium",timeZone:"UTC"}).format(new Date(v[3]+"T00:00:00Z"));
- const player=location.protocol==="file:"
-  ?'<p class="notice">To play inside this guide, open the private browser preview using Start Zion Preview from the extracted ZIP. The downloaded file still works for photos, maps and itinerary.</p>'
-  :'<iframe loading="lazy" src="https://www.youtube.com/embed/'+v[0]+(v[6]?'?start='+v[6]:'')+'" title="'+v[1]+'" allow="encrypted-media; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
- return '<section class="guide-video"><h2>'+v[1]+'</h2><p class="muted">'+v[2]+' · '+v[4]+' views · '+v[5]+' subscribers · '+published+'</p>'+player+'<p class="muted">Creator footage for orientation. Check official sources for current rules and trail conditions.</p></section>';
+ return '<section class="guide-video"><h2>'+v[1]+'</h2><p class="muted">'+v[2]+' · '+v[4]+' views · '+v[5]+' subscribers · '+published+'</p>'+videoPlayer(v[0],v[1],v[6])+'<p class="muted">Creator footage for orientation. Check official sources for current rules and trail conditions.</p></section>';
 }
 function guide(a){
  const isZion=a[7].includes("Zion entry");
@@ -291,7 +406,7 @@ function guide(a){
 const bryceLinks=()=>link("#bryce/trails","Explore Bryce trails &amp; guides")+link("https://www.nps.gov/brca/index.htm","Bryce Canyon · official plan")+link(map("Bryce Canyon National Park Visitor Center"),"Directions to Bryce")+link("https://www.nps.gov/brca/planyourvisit/conditions.htm","Bryce conditions")+link("https://www.nps.gov/brca/planyourvisit/fees.htm","Bryce entry fees");
 function dayBody(i){
  const p=plans[i];
- return '<p class="eyebrow">'+p.time+'</p><h3>'+p.title+'</h3><ol>'+p.steps.map(s=>'<li>'+s+'</li>').join("")+'</ol><p class="notice"><strong>Backup / open item</strong> '+p.fallback+'</p><div class="actions">'+(i===4?bryceLinks():"")+p.ids.map(id=>link("#guide/"+id,(i===4?"Backup · ":"")+activities.find(a=>a[0]===id)[1])).join("")+'</div>';
+ return '<p class="eyebrow">'+p.time+'</p><h3>'+p.title+'</h3><ol>'+p.steps.map(s=>'<li>'+s+'</li>').join("")+'</ol><p class="notice"><strong>Backup / open item</strong> '+p.fallback+'</p><div class="actions">'+(i===4?bryceLinks():"")+((i===1 || i===5)?link("#logistics/rental","Rental center directions"):"")+p.ids.map(id=>link("#guide/"+id,(i===4?"Backup · ":"")+activities.find(a=>a[0]===id)[1])).join("")+'</div>';
 }
 const itinerary=()=>'<section class="wrap guide">'+heading("November 24–29 · Proposed","Your six-day itinerary")+'<p>Times are local as labeled. Utah is one hour ahead of Las Vegas. Start with each day’s main plan and pick extras based on energy and conditions.</p><button id="print-trip" type="button">Print or save as PDF</button>'+days.map((d,i)=>'<article class="day"><strong>'+d[0]+' '+d[1]+'</strong><div>'+dayBody(i)+'</div></article>').join("")+'</section>';
 function today(){
@@ -301,7 +416,7 @@ function today(){
  const shown=i<0?3:i;
  return '<section class="wrap guide">'+heading(i<0?"Preview · Friday Nov 27":days[shown][0]+" Nov "+days[shown][1],"Today’s plan")+dayBody(shown)+'<div class="actions">'+link("#itinerary","Full itinerary")+link(shown===4?bryceConditions:conditions,shown===4?"Bryce conditions":"Zion conditions")+'</div></section>';
 }
-const logistics=()=>'<section class="wrap guide">'+heading("Public waypoints and estimates","Maps &amp; costs")+'<div class="actions">'+link(map(river[13]),"Zion shuttle parking")+link(map(overlook[13]),"Canyon Overlook")+link(map("Bryce Canyon National Park Visitor Center"),"Bryce Visitor Center")+link(map("Sunset Point Bryce Canyon"),"Bryce Sunset Point")+link(map(dunes[13]),"Coral Pink Sand Dunes")+link(map("Orderville, UT"),"Orderville")+link(map("Harry Reid Rent-A-Car Center, Las Vegas"),"LAS rental center")+'</div><h2>Two-vehicle example</h2><ul><li>Zion entry: $70 standard total.</li><li>Bryce Canyon: $35 per private vehicle, or $70 for two at standard rates.</li><li>Zion + Bryce: $140 standard total for two vehicles before pass savings or applicable surcharges.</li><li>Backup only · Coral Pink entry: $30 for two vehicles, plus $25 if renting one sled.</li><li>East Rim Jeep: from $49 per eligible person. Eight adults start at $392 before applicable fees and child tickets.</li><li>Peek-a-Boo: from $120 advertised. For 10 eligible guests, confirm at least two vehicles and get a group quote.</li></ul><p>USD. Eligibility, passes and vehicle count can change admission. Meals, fuel, parking and tour fees are separate. Group discounts remain unverified.</p><div class="actions">'+link(fees,"Zion fees")+link("https://www.nps.gov/brca/planyourvisit/fees.htm","Bryce fees")+link(duneFees,"Dunes fees")+link(rentals,"Dunes rentals")+link("https://zionarea.udot.utah.gov/","UDOT roads")+'</div></section>';
+const logistics=()=>'<section class="wrap guide">'+heading("Public waypoints and estimates","Maps &amp; costs")+'<div class="actions">'+link(map(river[13]),"Zion shuttle parking")+link(map(overlook[13]),"Canyon Overlook")+link(map("Bryce Canyon National Park Visitor Center"),"Bryce Visitor Center")+link(map("Sunset Point Bryce Canyon"),"Bryce Sunset Point")+link(map(dunes[13]),"Coral Pink Sand Dunes")+link(map("Orderville, UT"),"Orderville")+'</div><section id="rental-center" class="panel"><h2 tabindex="-1">Harry Reid Rent-A-Car Center</h2><p>'+rentalAddress+'</p><p>Use the same center for pickup and return. The airport offers a shuttle between the terminals and the rental center.</p><div class="actions">'+link(map(rentalAddress),"Open rental center directions")+link(rentalInfo,"Airport shuttle information")+'</div></section><h2>Two-vehicle example</h2><ul><li>Zion entry: $70 standard total.</li><li>Bryce Canyon: $35 per private vehicle, or $70 for two at standard rates.</li><li>Zion + Bryce: $140 standard total for two vehicles before pass savings or applicable surcharges.</li><li>Backup only · Coral Pink entry: $30 for two vehicles, plus $25 if renting one sled.</li><li>East Rim Jeep: from $49 per eligible person. Eight adults start at $392 before applicable fees and child tickets.</li><li>Peek-a-Boo: from $120 advertised. For 10 eligible guests, confirm at least two vehicles and get a group quote.</li></ul><p>USD. Eligibility, passes and vehicle count can change admission. Meals, fuel, parking and tour fees are separate. Group discounts remain unverified.</p><div class="actions">'+link(fees,"Zion fees")+link("https://www.nps.gov/brca/planyourvisit/fees.htm","Bryce fees")+link(duneFees,"Dunes fees")+link(rentals,"Dunes rentals")+link("https://zionarea.udot.utah.gov/","UDOT roads")+'</div></section>';
 const essentials=()=>'<section class="wrap guide">'+heading("Before you go","Trip essentials")+'<div class="notice"><strong>Check trail alerts before each outing.</strong> Watchman Trail was previously reported closed. Confirm its status with NPS before planning it.</div><p>Published canyon shuttle hours through Nov 28 are 7 AM first departure from the visitor center, 5 PM last outbound, and 6:15 PM last shuttle from Temple of Sinawava. No scheduled shuttle Nov 29–Dec 25. Check the schedule before leaving.</p><p><strong>Group example</strong> $70 Zion admission + $30 dunes admission + $25 for one optional sled = $125, assuming two vehicles, standard entry, and no surcharge or pass savings. Parking, tours, meals and transport are separate.</p><p>Bring warm layers, water and shoes with grip. Check for icy trails, road delays and tunnel vehicle limits. In an emergency, call 911 where service is available.</p><div class="actions">'+link(conditions,"Zion conditions")+link(shuttle,"Shuttle schedule")+link(fees,"Pass rules")+link("https://zionarea.udot.utah.gov/","UDOT road updates")+link("https://forecast.weather.gov/MapClick.php?lat=37.2&lon=-113.0","NWS forecast")+'</div></section>';
 function setupHeroVideo(){
  const video = main.querySelector(".hero-motion");
@@ -331,10 +446,11 @@ function brycePage(){
  return '<section class="wrap guide">'+heading("Saturday, November 28 · Day trip","Bryce Canyon National Park")+'<img src="'+photoFiles["bryce-winter"]+'" alt="Snow-dusted Bryce Amphitheater from Bryce Point"><p class="credit">Winter from Bryce Point · NPS / Peter Densmore</p><h2>Our Saturday plan</h2>'+dayBody(4)+'<p>Bryce sits around 8,000 feet. Check park and road conditions before driving.</p>'+link("#itinerary","Full trip itinerary")+'</section>'+explorer("Bryce");
 }
 function bryceGuide(a){
- return '<section class="wrap guide"><p><a href="#bryce/trails">← Back to Bryce trails</a></p>'+heading(activityLabel(a)+" · "+audiences[a[3]],a[1])+photo(a)+'<p class="credit">'+a[11]+'</p><p class="meta">'+a[5]+' · '+a[6]+'</p><h2>What to expect</h2><p>'+a[14]+'</p><h2>Access and terrain</h2><p>'+a[15]+'</p><h2>When to switch plans</h2><p>'+a[16]+'</p><h2>Cost</h2><p>'+a[7]+'. Standard admission is $35 per private vehicle. Check pass coverage and applicable surcharges.</p><div class="actions">'+link(map(a[13]),"Directions")+link(a[12],"Official guide")+link("https://www.nps.gov/brca/planyourvisit/conditions.htm","Current conditions")+link("https://www.nps.gov/brca/planyourvisit/fees.htm","Fees and passes")+'</div></section>';
+ return '<section class="wrap guide"><p><a href="#bryce/trails">← Back to Bryce trails</a></p>'+heading(activityLabel(a)+" · "+audiences[a[3]],a[1])+photo(a)+'<p class="credit">'+a[11]+'</p><p class="meta">'+a[5]+' · '+a[6]+'</p><h2>What to expect</h2><p>'+a[14]+'</p>'+watchVideo(a[0])+'<h2>Access and terrain</h2><p>'+a[15]+'</p><h2>When to switch plans</h2><p>'+a[16]+'</p><h2>Cost</h2><p>'+a[7]+'. Standard admission is $35 per private vehicle. Check pass coverage and applicable surcharges.</p><div class="actions">'+link(map(a[13]),"Directions")+link(a[12],"Official guide")+link("https://www.nps.gov/brca/planyourvisit/conditions.htm","Current conditions")+link(bryceFees,"Fees and passes")+'</div>'+'</section>';
 }
 let heroIndex = 0;
 function showParkSlide(index){
+ main.querySelectorAll("[data-entry]").forEach(entry => { entry.hidden = Number(entry.dataset.entry) !== index; });
  heroIndex = index;
  main.querySelectorAll("[data-panel]").forEach(panel => {
   const visible = Number(panel.dataset.panel) === index;
@@ -360,7 +476,7 @@ function homePage(){
      <div class="wrap">
        ${heading("Southern Utah · November 24–29, 2026", "Thanksgiving<br>in Zion")}
        <p>Explore Zion’s red-rock canyons and spend a day among the Bryce Canyon hoodoos.</p>
-       <div class="actions"><a class="button primary" href="#today">Today →</a>${link("#itinerary", "Itinerary")}${link("#explore", "Explore Zion")}${link("#bryce", "Bryce Canyon")}</div>
+       <div class="actions"><a class="button primary" href="#today">Today →</a>${link("#itinerary", "Itinerary")}<button type="button" data-jump-explorer>Explore Zion &amp; Bryce</button></div>
        <small><a class="hero-credit" href="https://www.nps.gov/zion/index.htm">The Watchman · NPS / Shane Carte</a> · <a class="hero-credit" href="https://www.pexels.com/video/zion-national-park-15336811/">Video · Roger Holzberg</a></small>
        <button type="button" class="hero-toggle">Play background video</button>
      </div>
@@ -370,15 +486,20 @@ function homePage(){
      <div class="wrap">
        ${heading("Saturday, November 28 · Day trip", "Bryce Canyon")}
        <p>Hoodoos, sweeping overlooks and a short rim walk when conditions allow.</p>
-       <div class="actions"><a class="button primary" href="#bryce">Bryce day plan →</a>${link("#bryce/trails", "Explore Bryce trails")}</div>
+       <div class="actions"><a class="button primary" href="#bryce">Bryce day plan →</a><button type="button" data-jump-explorer>Explore Bryce trails</button></div>
        <small>Winter from Bryce Point · NPS / Peter Densmore</small>
      </div>
    </div>
  </section>
- <section class="wrap entry">
+ <section class="wrap entry" data-entry="0">
    <h2>Zion National Park entry</h2>
    <p><strong>$35 per private vehicle</strong> · Valid for up to 7 days. Two standard vehicle passes would total $70. The canyon shuttle is free. Pass coverage and additional nonresident fees can affect the total.</p>
    <div class="actions">${link(fees, "Official fees &amp; passes")}${link("#kids", "Kids essentials")}</div>
+ </section>
+ <section class="wrap entry" data-entry="1" hidden>
+   <h2>Bryce Canyon National Park entry</h2>
+   <p><strong>$35 standard entry per private vehicle.</strong> Check pass coverage and applicable surcharges before your visit.</p>
+   <div class="actions">${link(bryceFees, "Official fees &amp; passes")}${link(bryceConditions, "Bryce conditions")}</div>
  </section>${explorer()}`;
 }
 function render(focus){
@@ -387,13 +508,13 @@ function render(focus){
  if(route==="home"){
   main.innerHTML=homePage();
   setupHeroVideo();
-  showParkSlide(heroIndex);
+  showParkSlide(explorerPark === "All" ? heroIndex : Number(explorerPark === "Bryce"));
  }else if(route==="bryce" || route==="bryce/trails"){main.innerHTML=brycePage();}
  else if(route==="explore"){main.innerHTML=explorer();}
  else if(route==="today"){main.innerHTML=today();}
  else if(route==="itinerary"){main.innerHTML=itinerary();}
- else if(route==="logistics"){main.innerHTML=logistics();}
- else if(route==="videos"){main.innerHTML='<section class="wrap guide">'+heading("Before the trip","Zion video guides")+'<label for="video-choice">Choose a video</label> <select id="video-choice"><option value="overview">Ultimate Zion travel guide</option><option value="beginner">Beginner’s guide to Zion</option><option value="winter">Zion in winter</option></select><div id="selected-video">'+watchVideo("overview")+'</div>'+'</section>';}
+ else if(route==="logistics" || route==="logistics/rental"){main.innerHTML=logistics();}
+ else if(route==="videos"){main.innerHTML='<section class="wrap guide">'+heading("Before the trip","Zion &amp; Bryce video guides")+'<label for="video-choice">Choose a video</label> <select id="video-choice"><option value="overview">Ultimate Zion travel guide</option><option value="beginner">Beginner’s guide to Zion</option><option value="winter">Zion in winter</option><option value="bryce-rim">Bryce · Sunset to Sunrise Rim Walk</option><option value="bryce-mossy">Bryce · Mossy Cave</option><option value="bryce-queen">Bryce · Queen’s Garden</option><option value="bryce-peekaboo">Bryce · Peekaboo Loop</option><option value="bryce-overlooks">Bryce · Viewpoints</option></select><div id="selected-video">'+watchVideo("overview")+'</div>'+'</section>';}
  else if(route==="kids"){main.innerHTML="<section class=\"wrap guide\"><p class=\"eyebrow\">Two children under five · Family planning</p><h1 tabindex=\"-1\">Kids Essentials</h1><p>Plan one main outing each day and keep an easy exit. Pa’rus is a good starting point. Riverside Walk is an option when the path is clear.</p><h2>1. Before leaving home</h2><ul><li>Bring or reserve a car seat for each child. Choose it by age, size and manufacturer limits. Practice fitting it and confirm the rental vehicle can accommodate both seats.</li><li>For paid tours, verify minimum age, approved restraints, seat capacity and cancellation terms directly with the operator before booking.</li><li>Pack layers, a windproof outer layer, spare socks and clothes, water, familiar snacks, diapers or toilet supplies as needed, and a small first-aid kit.</li></ul><h2>2. Before each outing</h2><ul><li>Check park alerts, weather and roads. Choose paved or sheltered options if exposed trails are icy, wet or windy.</li><li>Set a public meetup and turnaround time. If adults split off, name who is staying with each child and agree on when to reunite.</li><li>Plan restrooms before boarding. NPS says you must be able to load your stroller on the front shuttle rack yourself. Have another adult supervise the children while you load it.</li></ul><h2>3. On the trail</h2><ul><li>Keep children within reach near riverbanks, drop-offs and traffic. Keep them out of the Virgin River. Use a suitable carrier only where footing and terrain are appropriate.</li><li>Take a warm-up, snack or restroom break early. Turn back if kids are cold or tired, footing gets slippery, or daylight is running short.</li><li>Keep Canyon Overlook, Scout Lookout, Angels Landing and river wading out of the young-kids plan. Download maps and agree on a meetup before leaving cell service.</li></ul><div class=\"actions\"><a class=\"button\" href=\"#guide/pa-rus\">Pa’rus guide</a><a class=\"button\" href=\"#guide/riverside-walk\">Riverside guide</a><a class=\"button\" href=\"https://www.nhtsa.gov/vehicle-safety/car-seats-and-booster-seats\">NHTSA car seat guide</a><a class=\"button\" href=\"https://www.nps.gov/zion/planyourvisit/zion-canyon-shuttle-system.htm\">Shuttle and stroller rules</a><a class=\"button\" href=\"https://www.nps.gov/zion/planyourvisit/conditions.htm\">Zion conditions</a></div></section>";}
  else if(route==="essentials"){main.innerHTML=essentials();}
  else{
@@ -401,23 +522,26 @@ function render(focus){
   main.innerHTML=a?(a[0].startsWith("bryce-")?bryceGuide(a):guide(a)):'<section class="wrap">'+heading("Zion field guide","Page unavailable")+link("#explore","Explore adventures")+'</section>';
  }
  update();
- const active = route.startsWith("bryce/") || route.startsWith("guide/bryce-") ? "bryce"
+ const active = route.startsWith("logistics/") ? "logistics"
+  : route.startsWith("bryce/") || route.startsWith("guide/bryce-") ? "bryce"
   : route.startsWith("guide/") ? "explore" : route;
  document.querySelectorAll("header a").forEach(a => {
   if (a.hash === "#" + active) a.setAttribute("aria-current", "page");
   else a.removeAttribute("aria-current");
  });
- const heading = route === "bryce/trails"
+ const pageHeading = route === "bryce/trails"
   ? main.querySelector("#explorer-title")
+  : route === "logistics/rental" ? main.querySelector("#rental-center h2")
   : main.querySelector(".hero-panel:not([hidden]) h1, section:not(.hero) h1, section:not(.hero) h2[tabindex]");
- if (route === "bryce/trails") heading.scrollIntoView({block:"start"});
+ if (route === "bryce/trails" || route === "logistics/rental") pageHeading.scrollIntoView({block:"start"});
  else if (focus) window.scrollTo(0,0);
- if (focus) (heading || main).focus({preventScroll:true});
+ if (focus) (pageHeading || main).focus({preventScroll:true});
 }
 function handleNavigation(event){
  const link = event.target.closest('a[href^="#"]');
  if (!link || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
  moreMenu.open = false;
+ if (mobileMenu.open) mobileMenu.close();
  if (link.hash === "#main") {
   event.preventDefault();
   main.focus();
@@ -432,10 +556,39 @@ nav.addEventListener("keydown", event => {
  moreMenu.open = false;
  moreMenu.querySelector("summary").focus();
 });
+menuTrigger.addEventListener("click", () => {
+ menuTrigger.focus({preventScroll:true});
+ mobileMenu.showModal();
+ menuTrigger.setAttribute("aria-expanded", "true");
+});
+mobileMenu.addEventListener("close", () => menuTrigger.setAttribute("aria-expanded", "false"));
+mobileMenu.addEventListener("click", event => {
+ if (event.target === mobileMenu) mobileMenu.close();
+});
+window.matchMedia("(max-width:720px)").addEventListener("change", event => {
+ if (!event.matches && mobileMenu.open) mobileMenu.close();
+});
+function selectExplorerPark(park){
+ explorerPark = park;
+ main.querySelector("section[data-park]").dataset.park = park;
+ if (main.querySelector(".hero") && park !== "All") showParkSlide(park === "Bryce" ? 1 : 0);
+ update();
+}
+
 main.addEventListener("click", event => {
+ const jump = event.target.closest("[data-jump-explorer]");
+ if (jump) {
+  main.querySelector("#explorer-title").focus();
+  return;
+ }
+ const parkChoice = event.target.closest("[data-park-choice]");
+ if (parkChoice) {
+  selectExplorerPark(parkChoice.dataset.parkChoice);
+  return;
+ }
  const slide = event.target.closest("[data-slide]");
  if (slide) {
-  showParkSlide(Number(slide.dataset.slide));
+  selectExplorerPark(slide.dataset.slide === "1" ? "Bryce" : "Zion");
   return;
  }
  if (event.target.id === "print-trip") {
@@ -474,7 +627,10 @@ main.addEventListener("error",event=>{
  fallback.textContent="Image unavailable · "+img.alt;
  img.replaceWith(fallback);
 },true);
-window.addEventListener("hashchange",()=>render(true));
+window.addEventListener("hashchange", () => {
+ if (mobileMenu.open) mobileMenu.close();
+ render(true);
+});
 render(false);
 </script>
 </body>
