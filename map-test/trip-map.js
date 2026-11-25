@@ -7,6 +7,7 @@ const placeButtons = new Map();
 const orderedPlaces = placeGroups.flatMap(group => group.places);
 const pinnedPlaces = orderedPlaces.filter(place => place.point);
 const mapCenter = [37.2725735, -112.6451407];
+const airbnbAddress = "285 Prickly Pear Circle, Orderville, UT 84758";
 const mapOverview = detail.innerHTML;
 
 let map;
@@ -28,7 +29,7 @@ function addLink(container, label, href, className) {
 }
 
 function drivingRoute(destination) {
-  const params = new URLSearchParams({ api: "1", destination, travelmode: "driving" });
+  const params = new URLSearchParams({ api: "1", origin: airbnbAddress, destination, travelmode: "driving" });
   return "https://www.google.com/maps/dir/?" + params;
 }
 
@@ -44,11 +45,9 @@ function renderPlace(place, inPopup) {
   }
   if (place.shuttle) {
     addLink(actions, "Shuttle information", zionShuttle, "action");
-    if (!inPopup) {
-      addLink(actions, "Drive to Zion shuttle", drivingRoute(zionVisitorPoint.join(",")), "action");
-    }
+    addLink(actions, "Drive to Zion shuttle", drivingRoute(zionVisitorPoint.join(",")), "action");
   } else if (place.point) {
-    addLink(actions, "Driving directions", drivingRoute(place.point.join(",")), "action");
+    addLink(actions, "Directions from Airbnb", drivingRoute(place.point.join(",")), "action");
   }
   const support = element("div", "", "support-links");
   if (place.guides.length > 1) {
@@ -64,7 +63,14 @@ function renderPlace(place, inPopup) {
 function selectPlace(place) {
   activePlace = place;
   if (place) detail.replaceChildren(renderPlace(place, false));
-  else detail.innerHTML = mapOverview;
+  else {
+    detail.innerHTML = mapOverview;
+    const base = element("p", "Airbnb starting address: " + airbnbAddress);
+    const note = element("p", "Map view is centered on Orderville. Confirm the exact property location with your host.");
+    const link = element("a", "Find Airbnb in Google Maps", "action");
+    link.href = "https://www.google.com/maps/search/?" + new URLSearchParams({ api: "1", query: airbnbAddress });
+    detail.append(base, note, link);
+  }
   placeButtons.forEach((button, item) => button.setAttribute("aria-pressed", String(item === place)));
 }
 
